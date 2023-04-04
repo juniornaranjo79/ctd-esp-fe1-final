@@ -18,4 +18,14 @@ const PaginaFavoritos = () => {
     </div>
 }
 
+// useEffect(() => {
+//     if (favoritos.length > 0) {
+//         fetch(`https://rickandmortyapi.com/api/character/${favoritos}`)
+//             .then((res) => res.json())
+//             .then((result) => {
+//                 setListFavoritos(result);
+//             });
+//     }
+// }, [favoritos]);
+
 export default PaginaFavoritos

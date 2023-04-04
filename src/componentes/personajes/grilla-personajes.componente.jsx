@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import personajeSlice, { getPesonajes } from '../redux/personajeSlice';
 import './grilla-personajes.css';
 import TarjetaPersonaje from './tarjeta-personaje.componente';
 
@@ -12,29 +9,16 @@ import TarjetaPersonaje from './tarjeta-personaje.componente';
  *
  * @returns un JSX element
  */
-const GrillaPersonajes = () => {
-    const [page, setPage] = useState(1);
-    const dispatch = useAppDispatch();
-    const personajes = useAppSelector((state) => state.personajes);
-
-    useEffect(() => {
-        dispatch(getPesonajes(page));
-    }, [page]);
-
-    console.log(personajes);
+const GrillaPersonajes = ({ personajes }) => {
+    console.log('personajes', personajes);
 
     return (
         <div className='grilla-personajes'>
-            {/* {personajes?.map((personaje) => (
-                <TarjetaPersonaje
-                    name={personaje.name}
-                    image={personaje.image}
-                />
-            ))} */}
+            {personajes?.map((personaje)=>(
+                <TarjetaPersonaje key={personaje.id} name={personaje.name} image={personaje.image} />
+            ))}
 
-            <TarjetaPersonaje />
-            <TarjetaPersonaje />
-            <TarjetaPersonaje />
+            
         </div>
     );
 };
