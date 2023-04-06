@@ -20,10 +20,18 @@ interface Personaje {
     url: string;
     created: string;
 }
+ interface Info {
+    count: number;
+    pages: number;
+    next: string;
+    prev: string;
+ }
 
 interface initialType {
-    personajes: Personaje[]
+    personajes: Personaje[];
+    metData: Info;
     loading: boolean
+    
 }
 /**
  * @function getPesonajes
@@ -35,37 +43,37 @@ export const getPesonajes = createAsyncThunk(
     async (page: number) => {
         const res = await fetch(`https://rickandmortyapi.com/api/character/?page=${page}&limit=9`)
         const parseRes = await res.json()
-        const result = parseRes
-        //console.log(result)
-        return result
+        const results = parseRes
+        //console.log(parseRes)
+        return results
     }
 )
 
 
 const initialState: initialType = {
-    //metaData: {count: 0, pages: 1, next: "", prev: ""},
+    metData: {count: 0, pages: 1, next: "", prev: ""},
     personajes: [],
     loading: false
 }
 
-const personajesSlice = createSlice({
+const personajeSlice = createSlice({
     name: 'personajes',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-        .addCase(getPesonajes.pending, (state) => {
-            state.loading = true
-        })
-        .addCase(getPesonajes.fulfilled, (state, action) => {
-            state.loading = false
-            state.personajes= action.payload.results
-            //state.metaData= action.payload.info
-        })
-        .addCase(getPesonajes.rejected, (state, action) => {
-            state.loading = false
-        }) 
+            .addCase(getPesonajes.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(getPesonajes.fulfilled, (state, action) => {
+                state.loading = false
+                state.personajes = action.payload.results
+                state.metData = action.payload.info
+            })
+            .addCase(getPesonajes.rejected, (state, action) => {
+                state.loading = false
+            }) 
     }
 })
 
-export default personajesSlice.reducer
+export default personajeSlice.reducer

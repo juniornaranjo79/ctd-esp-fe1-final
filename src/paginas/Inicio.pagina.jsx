@@ -17,14 +17,27 @@ const PaginaInicio = () => {
     const [page, setPage] = useState(1);
     const dispatch = useAppDispatch();
     const personajes = useAppSelector((state)=> state.personajes.personajes);
+    const totalPage = useAppSelector((state) => state.personajes.metData.pages);
 
     /**
-     * Se obtiene el listado de los personakas limitados a 9 
+     * FUNTION: Se obtiene el listado de los personakas limitados a 9 
     */
 
     useEffect(()=>{
         dispatch(getPesonajes(page));
     }, [page, dispatch])
+
+    /**
+     * FUNTION: paginado de las vistas
+    */
+
+    const prevPage = () => {
+    setPage((page) => page - 1);
+    };
+
+    const nextPage = () => {
+        setPage((page) => page + 1);
+    };
 
 
     return <div className="container">
@@ -33,9 +46,9 @@ const PaginaInicio = () => {
             <button className="danger">Test Button</button>
         </div>
         <Filtros />
-        <Paginacion />
+        <Paginacion prevPage={prevPage} nextPage={nextPage} disablePrev={page === 1} disableNext={page === totalPage} />
         <GrillaPersonajes personajes={personajes} />
-        <Paginacion />
+        <Paginacion prevPage={prevPage} nextPage={nextPage} disablePrev={page === 1} disableNext={page === totalPage} />
     </div>
 }
 

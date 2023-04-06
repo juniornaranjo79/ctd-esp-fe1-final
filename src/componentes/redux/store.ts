@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import personajesSlice from './personajeSlice'
+import personajeSlice from './personajeSlice'
 
 export const store = configureStore({
   reducer: {
-    personajes: personajesSlice
+    personajes: personajeSlice
   },
 })
 
