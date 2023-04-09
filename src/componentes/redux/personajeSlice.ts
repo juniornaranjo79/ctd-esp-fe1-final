@@ -1,32 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { error } from "console";
-
-interface Personaje {
-    id: number;
-    name: string;
-    status: string;
-    species: string;
-    type: string;
-    gender: string;
-    origin: {
-        name: string;
-        url: string;
-    },
-    location: {
-        name: string;
-        url: string;
-    },
-    image: string;
-    episode: [string];
-    url: string;
-    created: string;
-}
- interface Info {
-    count: number;
-    pages: number;
-    next: string;
-    prev: string;
- }
+import { Info, Personaje } from "../hooks/type";
 
 interface initialType {
     personajes: Personaje[];
@@ -46,11 +19,9 @@ const initialState: initialType = {
     loading: false,
     error: false
 }
-/**
- * @function getAllCharacters
- * Esta funcion trae todos los personajes de la API y los limita a 9
- * 
-*/
+
+
+//FUNCION: Esta funcion trae todos los personajes de la API
 export const getAllCharacters = createAsyncThunk(
     'personajes',
     async (page: number) => {
@@ -65,6 +36,9 @@ export const getAllCharacters = createAsyncThunk(
         }
     }
 )
+
+
+//FUNCION: Esta funcion trae todos los personajes de la API filtrado por el name
 export const getSingleCharacter = createAsyncThunk(
     'personaje',
     async (name:string) => {

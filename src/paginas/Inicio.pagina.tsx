@@ -5,44 +5,38 @@ import Paginacion from "../componentes/paginacion/paginacion.componente";
 import { useAppDispatch, useAppSelector } from "../componentes/redux/hooks";
 import { getAllCharacters, getSingleCharacter, actionFiltrar, actionLimpiarFiltro  } from "../componentes/redux/personajeSlice";
 import useFav from "../componentes/hooks/useFav";
- 
+
+
 /**
- * Esta es la pagina principal. Aquí se debera ver el panel de filtros junto con la grilla de personajes.
- * 
- * Uso: 
- * ``` <PaginaInicio /> ```
- * 
- * @returns la pagina de inicio
- */
+ * Esta es la pagina principal. Aquí se debera ver el panel de filtros que contienen el input para filtrar, junto con la grilla de personajes.
+ * @returns {JSX.Element} Retorna un JSX element que es la pagina de inicio que contiene los diferentes componentes para hacerla funcional
+*/
+
 const PaginaInicio = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState<number>(1);
     const dispatch = useAppDispatch();
     const { personajes, error, loading, fav } = useAppSelector((state) => state.personajes);
     const totalPage = useAppSelector((state) => state.personajes.metData.pages);
-    const filtrar = useAppSelector((state) => state.personajes.filtro)
-    const [search, setSearch] = useState(filtrar);
-    const inputRef = useRef (null);
+    const filtrar = useAppSelector((state) => state.personajes.filtro);
+    const [search, setSearch] = useState<string>(filtrar);
+    const inputRef = useRef<HTMLInputElement> (null);
     const { favClick } = useFav();
 
-
+    //FUNCION: TRAE LOS CHARACTER FILTRADOS EN EL INPUT DE FILTRO
     useEffect(() => {
         dispatch(actionFiltrar(search))
         dispatch(getSingleCharacter(search));
     }, [search, dispatch])
 
-    /**
-     * FUNTION: Se obtiene el listado de los personajes
-    */
-
+    
+    //FUNCION: SE OBTIENE EL LISTADO DE TODOS LOS PERSONAJES
     useEffect(() => {
         dispatch(getAllCharacters(page));
         inputRef?.current?.focus();
     }, [page, dispatch])
 
-    /**
-     * FUNTION: paginado de las vistas
-    */
-
+    
+    //FUNTION: PAGINADO DE LA GRILLA DE LOS PERSONAJES
     const prevPage = () => {
     setPage((page) => page - 1);
     };
@@ -51,7 +45,7 @@ const PaginaInicio = () => {
         setPage((page) => page + 1);
     };
 
-    // Clear filtro
+    //FUNTION: QUE LIMPIA EL FILTRO
     const clearFilter = ()=> {
         setSearch('');
         dispatch(actionLimpiarFiltro());
@@ -62,18 +56,18 @@ const PaginaInicio = () => {
     return <div className="container">
         <div className="actions">
             <h3>Catálogo de Personajes</h3>
-            <button className="danger" onClick={clearFilter}>Limpiar</button>
+            <button className="danger" onClick={ clearFilter }>Limpiar</button>
         </div>
-        <Filtros inputRef={inputRef} searchCharacter={(e)=>setSearch(e.target.value)} value={search} />
-        <Paginacion prevPage={prevPage} nextPage={nextPage} disablePrev={page === 1} disableNext={page === totalPage} />
+        <Filtros inputRef={ inputRef } searchCharacter={(e)=>setSearch(e.target.value)} value={ search } />
+        <Paginacion prevPage={ prevPage } nextPage={ nextPage } disablePrev={ page === 1 } disableNext={ page === totalPage } />
         { error && ( <h2>No se encontro el personaje</h2>) }
         { loading && ( <h2>Cargando</h2> ) }
         { !error && !loading && (
             <>
-                <GrillaPersonajes personajes={personajes} fav={fav} favClick={favClick} />
+                <GrillaPersonajes personajes={ personajes } fav={ fav } favClick={ favClick } />
             </>
         ) }
-        <Paginacion prevPage={prevPage} nextPage={nextPage} disablePrev={page === 1} disableNext={page === totalPage} />
+        <Paginacion prevPage={ prevPage } nextPage={ nextPage } disablePrev={ page === 1 } disableNext={ page === totalPage } />
     </div>
 }
 

@@ -1,6 +1,13 @@
 import './filtros.css';
 
-const Filtros = ({inputRef, searchCharacter, value}) => {
+
+interface Props {
+    inputRef: React.RefObject<HTMLInputElement>;
+    searchCharacter: (e: React.ChangeEvent<HTMLInputElement>) => void ;
+    value:string;
+}
+
+const Filtros = ({inputRef, searchCharacter, value} : Props) => {
 
     return (
         <div className='filtros'>

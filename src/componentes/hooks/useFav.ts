@@ -5,10 +5,6 @@ const useFav = () => {
     const dispatch =useAppDispatch();
     const fav = useAppSelector((state) => state.personajes.fav)
     
-    /**
-     * Maneja el evento click en un botón de favorito
-     * @param {number} id - ID del personaje a marcar/desmarcar como favorito
-    */
     const favClick = (id:number) => {
         const idExist = fav.some((fav) => fav === id);
         if (idExist) {
