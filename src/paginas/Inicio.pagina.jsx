@@ -1,9 +1,10 @@
+import { useEffect, useState, useRef } from "react";
 import Filtros from "../componentes/personajes/filtros.componente"
 import GrillaPersonajes from "../componentes/personajes/grilla-personajes.componente"
 import Paginacion from "../componentes/paginacion/paginacion.componente";
-import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../componentes/redux/hooks";
-import { getPesonajes } from "../componentes/redux/personajeSlice";
+import { getAllCharacters, getSingleCharacter, actionFiltrar, actionLimpiarFiltro  } from "../componentes/redux/personajeSlice";
+import useFav from "../componentes/hooks/useFav";
  
 /**
  * Esta es la pagina principal. Aquí se debera ver el panel de filtros junto con la grilla de personajes.
@@ -16,15 +17,26 @@ import { getPesonajes } from "../componentes/redux/personajeSlice";
 const PaginaInicio = () => {
     const [page, setPage] = useState(1);
     const dispatch = useAppDispatch();
-    const personajes = useAppSelector((state)=> state.personajes.personajes);
+    const { personajes, error, loading, fav } = useAppSelector((state) => state.personajes);
     const totalPage = useAppSelector((state) => state.personajes.metData.pages);
+    const filtrar = useAppSelector((state) => state.personajes.filtro)
+    const [search, setSearch] = useState(filtrar);
+    const inputRef = useRef (null);
+    const { favClick } = useFav();
+
+
+    useEffect(() => {
+        dispatch(actionFiltrar(search))
+        dispatch(getSingleCharacter(search));
+    }, [search, dispatch])
 
     /**
-     * FUNTION: Se obtiene el listado de los personakas limitados a 9 
+     * FUNTION: Se obtiene el listado de los personajes
     */
 
-    useEffect(()=>{
-        dispatch(getPesonajes(page));
+    useEffect(() => {
+        dispatch(getAllCharacters(page));
+        inputRef?.current?.focus();
     }, [page, dispatch])
 
     /**
@@ -39,15 +51,28 @@ const PaginaInicio = () => {
         setPage((page) => page + 1);
     };
 
+    // Clear filtro
+    const clearFilter = ()=> {
+        setSearch('');
+        dispatch(actionLimpiarFiltro());
+        inputRef?.current?.focus();
+        dispatch(getAllCharacters(1));
+    }
 
     return <div className="container">
         <div className="actions">
             <h3>Catálogo de Personajes</h3>
-            <button className="danger">Test Button</button>
+            <button className="danger" onClick={clearFilter}>Limpiar</button>
         </div>
-        <Filtros />
+        <Filtros inputRef={inputRef} searchCharacter={(e)=>setSearch(e.target.value)} value={search} />
         <Paginacion prevPage={prevPage} nextPage={nextPage} disablePrev={page === 1} disableNext={page === totalPage} />
-        <GrillaPersonajes personajes={personajes} />
+        { error && ( <h2>No se encontro el personaje</h2>) }
+        { loading && ( <h2>Cargando</h2> ) }
+        { !error && !loading && (
+            <>
+                <GrillaPersonajes personajes={personajes} fav={fav} favClick={favClick} />
+            </>
+        ) }
         <Paginacion prevPage={prevPage} nextPage={nextPage} disablePrev={page === 1} disableNext={page === totalPage} />
     </div>
 }

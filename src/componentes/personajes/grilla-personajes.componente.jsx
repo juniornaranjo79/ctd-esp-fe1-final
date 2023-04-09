@@ -9,13 +9,20 @@ import TarjetaPersonaje from './tarjeta-personaje.componente';
  *
  * @returns un JSX element
  */
-const GrillaPersonajes = ({ personajes }) => {
+const GrillaPersonajes = ({ personajes, favClick, fav }) => {
     console.log('personajes', personajes);
 
     return (
         <div className='grilla-personajes'>
             {personajes?.map((personaje)=>(
-                <TarjetaPersonaje key={personaje.id} name={personaje.name} image={personaje.image} />
+                <TarjetaPersonaje 
+                    key={personaje.id} 
+                    name={personaje.name} 
+                    image={personaje.image} 
+                    id={personaje.id} 
+                    favClick={()=> favClick(personaje.id)} 
+                    isFav={fav.some((fav)=> fav===personaje.id)} 
+                />
             ))}
 
             
